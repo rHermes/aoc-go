@@ -1,8 +1,8 @@
 package y2020
 
 import (
+	"bytes"
 	"errors"
-	"io"
 	"strconv"
 
 	"github.com/rhermes/aoc-go/utils"
@@ -24,8 +24,8 @@ func d1solve(nums []int64, target, left int64) (int64, bool) {
 	return -1, false
 }
 
-func Day01Part01(rdr io.Reader) (string, error) {
-	nums, err := utils.LinesToInt64(rdr)
+func Day01Part01(input []byte) (string, error) {
+	nums, err := utils.LinesToInt64(bytes.NewReader(input))
 	if err != nil {
 		return "", err
 	}
@@ -37,8 +37,8 @@ func Day01Part01(rdr io.Reader) (string, error) {
 	return strconv.FormatInt(ans, 10), nil
 }
 
-func Day01Part02(rdr io.Reader) (string, error) {
-	nums, err := utils.LinesToInt64(rdr)
+func Day01Part02(input []byte) (string, error) {
+	nums, err := utils.LinesToInt64(bytes.NewReader(input))
 	if err != nil {
 		return "", err
 	}

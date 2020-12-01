@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io"
 	"log"
 	"os"
 
@@ -27,7 +26,7 @@ func main() {
 	}
 }
 
-type TaskFunc func(io.Reader) (string, error)
+type TaskFunc func([]byte) (string, error)
 
 type Task struct {
 	Year int
@@ -82,7 +81,7 @@ var RunCommand = &cli.Command{
 				return errors.New("Part not found!")
 			}
 
-			ans, err := f(bytes.NewReader(buf.Bytes()))
+			ans, err := f(buf.Bytes())
 			if err != nil {
 				return err
 			}
