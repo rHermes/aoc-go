@@ -37,6 +37,8 @@ type Task struct {
 var ydp = map[Task]TaskFunc{
 	Task{2020, 1, 1}: y2020.Day01Part01,
 	Task{2020, 1, 2}: y2020.Day01Part02,
+	Task{2020, 2, 1}: y2020.Day02Part01,
+	Task{2020, 2, 2}: y2020.Day02Part02,
 }
 
 var RunCommand = &cli.Command{
