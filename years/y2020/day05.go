@@ -40,13 +40,13 @@ func Day05Part01(input []byte) (string, error) {
 }
 
 func Day05Part02(input []byte) (string, error) {
-	var min, max, inperf, perf uint64
+	var min, max, ans uint64
 	min = math.MaxUint64
 	for _, l := range bytes.Split(bytes.TrimSpace(input), []byte{'\n'}) {
 		if x, err := d5PassToId(l); err != nil {
 			return "", err
 		} else {
-			inperf ^= x
+			ans ^= x
 			if x < min {
 				min = x
 			}
@@ -55,14 +55,12 @@ func Day05Part02(input []byte) (string, error) {
 			}
 		}
 	}
-
-	// We find the missing number by assuming it's the only missing
-	// and taking the xor of the perfect series and the xor of the missing
-	// series and seeing what comes out. This is like doing a parity check
-	// in a raid.
+	// Since A ^ A = 0, when we reapply all the XORs in the range, the one missing
+	// will be the one we are missing who will be left. This is the same thing done in
+	// storage RAIDs for parity!
 	for i := min; i <= max; i++ {
-		perf ^= i
+		ans ^= i
 	}
 
-	return strconv.FormatUint(inperf^perf, 10), nil
+	return strconv.FormatUint(ans, 10), nil
 }
