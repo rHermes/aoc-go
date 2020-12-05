@@ -9,7 +9,7 @@ import (
 
 func d5PassToId(input []byte) (uint64, error) {
 	if len(input) != 10 {
-		return 0, errors.New("2 invalid input")
+		return 0, errors.New("invalid input")
 	}
 
 	ans := uint64(0)
