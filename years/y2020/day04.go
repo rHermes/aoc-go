@@ -12,7 +12,7 @@ func d4ValidateDate(a []byte, from, to uint64, size int) uint8 {
 		}
 	}
 	i, err := strconv.ParseUint(string(a), 10, 64)
-	if err == nil && (from <= i) && (i <= to) {
+	if err == nil && from <= i && i <= to {
 		return 1
 	} else {
 		return 0
@@ -84,15 +84,15 @@ func d4hash(p []byte, validate bool) uint8 {
 	}
 }
 
-func Day04Part01(input []byte) (string, error) {
-	ans := uint64(0)
+func d4solve(input []byte, validate bool) (string, error) {
+	var ans uint64
 	for _, a := range bytes.Split(bytes.TrimSpace(input), []byte{'\n', '\n'}) {
 		a = bytes.ReplaceAll(a, []byte{'\n'}, []byte{' '})
 
 		// Use bit flags
-		f := uint8(0)
+		var f uint8
 		for _, p := range bytes.Split(a, []byte{' '}) {
-			f |= d4hash(p, false)
+			f |= d4hash(p, validate)
 		}
 		if f == 0b11111110 {
 			ans++
@@ -101,19 +101,10 @@ func Day04Part01(input []byte) (string, error) {
 	return strconv.FormatUint(ans, 10), nil
 }
 
-func Day04Part02(input []byte) (string, error) {
-	ans := uint64(0)
-	for _, a := range bytes.Split(bytes.TrimSpace(input), []byte{'\n', '\n'}) {
-		a = bytes.ReplaceAll(a, []byte{'\n'}, []byte{' '})
+func Day04Part01(input []byte) (string, error) {
+	return d4solve(input, false)
+}
 
-		// Use bit flags
-		f := uint8(0)
-		for _, p := range bytes.Split(a, []byte{' '}) {
-			f |= d4hash(p, true)
-		}
-		if f == 0b11111110 {
-			ans++
-		}
-	}
-	return strconv.FormatUint(ans, 10), nil
+func Day04Part02(input []byte) (string, error) {
+	return d4solve(input, true)
 }
