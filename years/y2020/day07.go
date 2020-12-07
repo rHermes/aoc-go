@@ -85,9 +85,7 @@ func Day07Part01(input []byte) (string, error) {
 		return "", err
 	}
 	ans := uint64(0)
-	cache := map[string]bool{
-		"shiny gold": true,
-	}
+	cache := map[string]bool{"shiny gold": true}
 	for k := range bags {
 		if d7Contains(cache, bags, k) {
 			ans++
