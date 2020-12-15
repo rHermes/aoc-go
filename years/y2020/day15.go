@@ -1,9 +1,10 @@
 package y2020
 
 import (
-	"bytes"
 	"strconv"
 	"strings"
+
+	"github.com/rhermes/aoc-go/utils"
 )
 
 func d15Solve(init []uint64, N uint64) uint64 {
@@ -24,16 +25,10 @@ func d15Solve(init []uint64, N uint64) uint64 {
 }
 
 func d15FullSolve(input []byte, N uint64) (string, error) {
-	raw := strings.Split(string(bytes.TrimSpace(input)), ",")
-	nums := make([]uint64, 0, len(raw))
-	for _, rs := range raw {
-		a, err := strconv.ParseUint(rs, 10, 64)
-		if err != nil {
-			return "", err
-		}
-		nums = append(nums, a)
+	nums, err := utils.LineToUint64s(strings.TrimSpace(string(input)), ",")
+	if err != nil {
+		return "", err
 	}
-
 	return strconv.FormatUint(d15Solve(nums, N), 10), nil
 }
 
