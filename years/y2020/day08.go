@@ -15,6 +15,11 @@ const (
 	OpNop
 )
 
+type d8Inst struct {
+	Op  d8Op
+	Arg int64
+}
+
 type d8VM struct {
 	Acc   int64
 	Ip    int64
@@ -41,11 +46,6 @@ func (vm *d8VM) Step() error {
 	}
 
 	return nil
-}
-
-type d8Inst struct {
-	Op  d8Op
-	Arg int64
 }
 
 func d8ParseProgram(input []byte) ([]d8Inst, error) {
@@ -81,6 +81,19 @@ func d8ParseProgram(input []byte) ([]d8Inst, error) {
 	return insts, nil
 }
 
+func (vm *d8VM) RunTilLoop() error {
+	seen := make(map[int64]struct{}, 0)
+
+	seen[int64(len(vm.Insts))] = struct{}{}
+	for _, ok := seen[vm.Ip]; !ok; _, ok = seen[vm.Ip] {
+		seen[vm.Ip] = struct{}{}
+
+		if err := vm.Step(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 func Day08Part01(input []byte) (string, error) {
 	insts, err := d8ParseProgram(input)
 	if err != nil {
@@ -91,12 +104,41 @@ func Day08Part01(input []byte) (string, error) {
 		Acc:   0,
 		Ip:    0,
 	}
-	vm = vm
-	// seen := make(map[int64]
 
-	return "", errors.New("Not implemented")
+	if err := vm.RunTilLoop(); err != nil {
+		return "", err
+	}
+
+	return strconv.FormatInt(vm.Acc, 10), nil
 }
 
 func Day08Part02(input []byte) (string, error) {
-	return "", errors.New("Not implemented")
+	insts, err := d8ParseProgram(input)
+	if err != nil {
+		return "", err
+	}
+
+	for i, inst := range insts {
+		if inst.Op == OpAcc {
+			continue
+		}
+		op := OpJmp
+		if inst.Op == OpJmp {
+			op = OpNop
+		}
+		op, insts[i].Op = insts[i].Op, op
+		vm := &d8VM{
+			Insts: insts,
+			Acc:   0,
+			Ip:    0,
+		}
+		if err := vm.RunTilLoop(); err != nil {
+			return "", err
+		}
+		if int(vm.Ip) == len(vm.Insts) {
+			return strconv.FormatInt(vm.Acc, 10), nil
+		}
+		insts[i].Op = op
+	}
+	return "", errors.New("No answer found")
 }
